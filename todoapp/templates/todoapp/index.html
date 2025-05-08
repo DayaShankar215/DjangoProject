@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        body {
+            background: linear-gradient(270deg, #ff7eb3, #ff758c, #ff6a65, #ff5f3e);
+            background-size: 400% 400%;
+            animation: gradientBackground 10s ease infinite;
+            font-family: 'Poppins', sans-serif;
+        }
+        .task-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="p-6 font-sans">
+
+    <div class="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h1 class="text-3xl font-extrabold mb-6 text-center text-gray-800">📝 My To-Do List</h1>
+
+        <!-- Add Task Form -->
+        <form method="POST" action="{% url 'add_task' %}" class="mb-6">
+            {% csrf_token %}
+            <div class="mb-4">
+                <input type="text" name="title" placeholder="Task Title"
+                    class="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div class="mb-4">
+                <textarea name="description" placeholder="Description (optional)"
+                    class="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
+            <button type="submit"
+                class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md">
+                ➕ Add Task
+            </button>
+        </form>
+
+        <!-- Task List -->
+        <ul>
+            {% for task in tasks %}
+            <li class="task-item bg-gray-50 p-4 mb-4 rounded shadow-sm animate__animated animate__fadeInUp flex justify-between items-center transition-transform duration-300">
+                <div>
+                    <strong class="text-lg text-gray-800">{{ task.title }}</strong>
+                    <p class="text-sm text-gray-600">{{ task.description }}</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{% url 'edit_task' task.id %}"
+                       class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-4 py-2 rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition shadow-md">✏️ Edit</a>
+                    <a href="{% url 'delete_task' task.id %}"
+                       class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition shadow-md">🗑️ Delete</a>
+                </div>
+            </li>
+            {% empty %}
+            <li class="text-center text-gray-500 animate__animated animate__fadeIn">No tasks available</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-gray-600">
+        <p class="text-sm">"Stay productive and keep achieving your goals!"</p>
+        <p class="text-xs mt-2">&copy; 2023 To-Do App</p>
+    </footer>
+
+</body>
+</html>

@@ -32,26 +32,42 @@
         <form method="POST" action="{% url 'add_task' %}" class="mb-6">
             {% csrf_token %}
             <div class="mb-4">
-                <input type="text" name="title" placeholder="Task Title"
-                    class="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <input type="text" name="title" placeholder="Task Title"
+            class="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
             <div class="mb-4">
-                <textarea name="description" placeholder="Description (optional)"
-                    class="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            <textarea name="description" placeholder="Description (optional)"
+            class="w-full border rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
+            <div class="mb-4 flex items-center gap-2">
+            <input type="checkbox" name="mark_all_completed" id="mark_all_completed"
+            class="w-5 h-5 text-green-500 border-gray-300 rounded focus:ring-green-500" onclick="markAllTasksCompleted()">
+            <label for="mark_all_completed" class="text-gray-700">Mark All as Completed</label>
             </div>
             <button type="submit"
-                class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md">
-                ➕ Add Task
+            class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md">
+            ➕ Add Task
             </button>
         </form>
+
+        <script>
+            function markAllTasksCompleted() {
+            const checkboxes = document.querySelectorAll('input[name="completed"]');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+            }
+        </script>
 
         <!-- Task List -->
         <ul>
             {% for task in tasks %}
             <li class="task-item bg-gray-50 p-4 mb-4 rounded shadow-sm animate__animated animate__fadeInUp flex justify-between items-center transition-transform duration-300">
-                <div>
-                    <strong class="text-lg text-gray-800">{{ task.title }}</strong>
-                    <p class="text-sm text-gray-600">{{ task.description }}</p>
+                <div class="flex items-center gap-4">
+                    <input type="checkbox" name="completed" {% if task.completed %}checked{% endif %}
+                           class="w-5 h-5 text-green-500 border-gray-300 rounded focus:ring-green-500">
+                    <div>
+                        <strong class="text-lg text-gray-800">{{ task.title }}</strong>
+                        <p class="text-sm text-gray-600">{{ task.description }}</p>
+                    </div>
                 </div>
                 <div class="flex gap-2">
                     <a href="{% url 'edit_task' task.id %}"
